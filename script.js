@@ -5,7 +5,6 @@ async function send() {
 
   if (!msg) return;
 
-  // Show user message
   messages.innerHTML += `
     <div class="message user"><b>You:</b> ${msg}</div>
   `;
@@ -13,20 +12,33 @@ async function send() {
   input.value = "";
   messages.scrollTop = messages.scrollHeight;
 
-  // Typing effect
   messages.innerHTML += `
     <div class="message bot" id="typing"><b>Moko:</b> typing...</div>
   `;
   messages.scrollTop = messages.scrollHeight;
 
-  // Dummy AI reply (testing)
-  setTimeout(() => {
+  try {
+    const res = await fetch("https://node-express--topy220.replit.app/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+
+    const data = await res.json();
+
+    document.getElementById("typing").remove();
+
+    messages.innerHTML += `
+      <div class="message bot"><b>Moko:</b> ${data.reply}</div>
+    `;
+  } catch (error) {
     document.getElementById("typing").remove();
     messages.innerHTML += `
-      <div class="message bot"><b>Moko:</b> 🤖 I received: "${msg}"</div>
+      <div class="message bot"><b>Moko:</b> ⚠️ Connection error</div>
     `;
-    messages.scrollTop = messages.scrollHeight;
-  }, 800);
+  }
+
+  messages.scrollTop = messages.scrollHeight;
 }
  
  
