@@ -28,3 +28,4 @@ async function send() {
     messages.scrollTop = messages.scrollHeight;
   }, 800);
 }
+ 
